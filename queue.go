@@ -1,4 +1,4 @@
-package task
+package taskpool
 
 type queue struct {
 	queues []chan *Task

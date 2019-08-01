@@ -1,4 +1,4 @@
-package task
+package taskpool
 
 import (
 	"runtime"

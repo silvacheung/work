@@ -1,7 +1,6 @@
 package taskpool
 
 import (
-	"fmt"
 	"sync"
 	"sync/atomic"
 )
@@ -111,14 +110,9 @@ func (p *pool) worker(index int, wg *sync.WaitGroup) {
 }
 
 func (p *pool) exec(index int, t *Task) {
-	defer func() {
-		if e := recover(); e != nil {
-			fmt.Print(e)
-		}
-		<-p.numGoroutine
-		p.wait.Done()
-	}()
 	t.Exec()
+	p.wait.Done()
+	<-p.numGoroutine
 }
 
 func getPool(poolName string) (*pool, error) {

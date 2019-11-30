@@ -12,7 +12,7 @@ task = work.New("empty-task", func() {
 
 // 添加任务到池
 if err := work.Put("default", task); err != nil {
-    // handle error``
+    // handle error
 }
 
 // 根据需要关闭任务池

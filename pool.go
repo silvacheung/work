@@ -1,4 +1,4 @@
-package taskpool
+package work
 
 import (
 	"sync"
@@ -21,7 +21,7 @@ type pool struct {
 	state        int32
 }
 
-func StartPool(opts ...Option) {
+func Start(opts ...Option) {
 	opt := initOptions(opts...)
 	pool := &pool{
 		opt:          initOptions(opts...),
@@ -33,17 +33,17 @@ func StartPool(opts ...Option) {
 	pool.start()
 }
 
-func StopPool(poolName string) {
-	if pool, err := getPool(poolName); err == nil {
+func Stop(name string) {
+	if pool, err := getPool(name); err == nil {
 		pool.stop()
 	}
 }
 
-func Put(poolName string, task ...*Task) error {
-	if len(poolName) == 0 {
-		poolName = DefaultPool
+func Put(name string, task ...*Task) error {
+	if len(name) == 0 {
+		name = DefaultPool
 	}
-	if pool, err := getPool(poolName); err != nil {
+	if pool, err := getPool(name); err != nil {
 		return err
 	} else {
 		return pool.put(task...)
@@ -115,8 +115,8 @@ func (p *pool) exec(index int, t *Task) {
 	<-p.numGoroutine
 }
 
-func getPool(poolName string) (*pool, error) {
-	item, ok := pools.Load(poolName)
+func getPool(name string) (*pool, error) {
+	item, ok := pools.Load(name)
 	if !ok {
 		return nil, PoolNotFound
 	}

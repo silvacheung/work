@@ -3,20 +3,20 @@
 # 简单使用
 ```
 // 开启一个任务池,指定最大的协程数为1000,worker数为cpu的核数
-taskpool.StartPool(WithPoolName("default"), WithGoroutineNum(1000), WithWorkerNum(runtime.NumCPU()))
+work.Start(WithName("default"), WithGoroutineNum(1000), WithWorkerNum(runtime.NumCPU()))
 
 // 初始化一个任务
-task = taskpool.New("empty-task", func() {
+task = work.New("empty-task", func() {
     // empty task
 })
 
 // 添加任务到池
-if err := taskpool.Put("default", task); err != nil {
+if err := work.Put("default", task); err != nil {
     // handle error
 }
 
 // 根据需要关闭任务池
-taskpool.StopPool("default")
+work.Stop("default")
 ```
 
 # 简单测试

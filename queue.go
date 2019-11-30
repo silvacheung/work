@@ -1,4 +1,4 @@
-package taskpool
+package work
 
 type queue struct {
 	queues []chan *Task
@@ -19,8 +19,9 @@ func initQueue(workerNum, goroutineNum int) *queue {
 	}
 
 	// 给每个worker分配队列
+	chanSize := goroutineNum / workerNum
 	for i := 0; i < workerNum; i++ {
-		item := make(chan *Task, goroutineNum/workerNum)
+		item := make(chan *Task, chanSize)
 		queue.queues[i] = item
 		queue.pickCh <- item
 	}

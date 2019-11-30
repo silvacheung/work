@@ -1,4 +1,4 @@
-package taskpool
+package work
 
 import (
 	"runtime"
@@ -10,8 +10,8 @@ var task = New("empty-task", func() {
 })
 
 func init() {
-	StartPool(WithPoolName(DefaultPool), WithGoroutineNum(1000), WithWorkerNum(runtime.NumCPU()))
-	//StopPool(DefaultPool)
+	Start(WithPoolName(DefaultPool), WithGoroutineNum(1000), WithWorkerNum(runtime.NumCPU()))
+	//Stop(DefaultPool)
 }
 
 // BenchmarkPut-4           3000000               412 ns/op               0 B/op          0 allocs/op

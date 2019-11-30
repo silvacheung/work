@@ -1,4 +1,4 @@
-package taskpool
+package work
 
 import (
 	"errors"

@@ -5,7 +5,7 @@ type queue struct {
 	pickCh chan chan *Task
 }
 
-func initQueue(workerNum, goroutineNum int) *queue {
+func initQueue(workerNum, queueSize uint) *queue {
 
 	queue := &queue{
 		queues: make([]chan *Task, workerNum),
@@ -14,13 +14,13 @@ func initQueue(workerNum, goroutineNum int) *queue {
 
 	// 保证能够被workerNum整除,这里差多少就补多少
 	// 这里只是控制队列的大小,并不是实际的协程数,所以多点少点没关系
-	if diff := goroutineNum % workerNum; diff != 0 {
-		goroutineNum += diff
+	if diff := queueSize % workerNum; diff != 0 {
+		queueSize += diff
 	}
 
 	// 给每个worker分配队列
-	chanSize := goroutineNum / workerNum
-	for i := 0; i < workerNum; i++ {
+	chanSize := queueSize / workerNum
+	for i := uint(0); i < workerNum; i++ {
 		item := make(chan *Task, chanSize)
 		queue.queues[i] = item
 		queue.pickCh <- item
@@ -29,7 +29,7 @@ func initQueue(workerNum, goroutineNum int) *queue {
 	return queue
 }
 
-func (q *queue) receive(index int) <-chan *Task {
+func (q *queue) receive(index uint) <-chan *Task {
 	return q.queues[index]
 }
 

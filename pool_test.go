@@ -1,7 +1,6 @@
 package work
 
 import (
-	"runtime"
 	"testing"
 )
 
@@ -10,7 +9,7 @@ var task = New("empty-task", func() {
 })
 
 func init() {
-	Start(WithPoolName(DefaultPool), WithGoroutineNum(1000), WithWorkerNum(runtime.NumCPU()))
+	Start(WithPoolName(DefaultPool), WithGoroutineNum(100), WithWorkerNum(8), WithQueueSize(10000))
 	//Stop(DefaultPool)
 }
 

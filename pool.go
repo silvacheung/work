@@ -24,8 +24,8 @@ type pool struct {
 func Start(opts ...Option) {
 	opt := initOptions(opts...)
 	pool := &pool{
-		opt:          initOptions(opts...),
-		queue:        initQueue(opt.workerNum, opt.goroutineNum),
+		opt:          opt,
+		queue:        initQueue(opt.workerNum, opt.queueSize),
 		numGoroutine: make(chan struct{}, opt.goroutineNum),
 		wait:         &sync.WaitGroup{},
 	}
@@ -87,14 +87,14 @@ func (p *pool) put(task ...*Task) error {
 // 使用wg保证worker的同步启动
 func (p *pool) start() {
 	wg := &sync.WaitGroup{}
-	for i := 0; i < p.opt.workerNum; i++ {
+	for i := uint(0); i < p.opt.workerNum; i++ {
 		wg.Add(1)
 		go p.worker(i, wg)
 	}
 	wg.Wait()
 }
 
-func (p *pool) worker(index int, wg *sync.WaitGroup) {
+func (p *pool) worker(index uint, wg *sync.WaitGroup) {
 	wg.Done()
 	for {
 		select {
@@ -109,7 +109,7 @@ func (p *pool) worker(index int, wg *sync.WaitGroup) {
 	}
 }
 
-func (p *pool) exec(index int, t *Task) {
+func (p *pool) exec(index uint, t *Task) {
 	t.Exec()
 	p.wait.Done()
 	<-p.numGoroutine
